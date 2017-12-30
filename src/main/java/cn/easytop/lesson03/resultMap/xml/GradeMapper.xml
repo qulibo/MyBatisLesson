@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.easytop.lesson03.resultMap.xml.GradeMapper">
+  <resultMap type="grade" id="gradeMap" autoMapping="true">
+     <!-- 列和属性的关系  主键使用id 非主键 使用result -->
+     <id column="gid" property="gid"/>
+     <result column="gname" property="gname1"/>
+  </resultMap>
+  <!-- 用于映射一对多 autoMapping表示相同的列自动映射 -->
+  <resultMap type="grade" id="gradeOne" autoMapping="true">
+     <!-- 列和属性的关系  主键使用id 非主键 使用result -->
+     <id column="gid" property="gid"/>
+     <result column="gname" property="gname1"/>
+     <collection property="studentList" column="gid" javaType="arraylist" select="cn.easytop.lesson03.resultMap.xml.StudentMapper.queryStudentByGid"
+       autoMapping="true"
+     >
+     </collection>
+  </resultMap>
+  
+  
+  <!-- 
+      结果集映射：数据库的列名和实体类的属性名 如果不一致  需要建立 列名和属性名的映射关系 
+               结果集映射返回的结果是相同 的 都是grade  只是多了一层关系
+   -->
+  <select id="queryAllGrade" resultMap="gradeMap" >
+      select * from grade
+  </select>
+  
+  <select id="queryGradeByGid" resultMap="gradeMap">
+     SELECT * FROM grade WHERE gid=#{gid}
+  </select>
+  
+  <!-- 1对多的关系 
+    	  查询某个班级  班级下 多个学生
+        select * from student where gid=当前的gid
+   -->
+  <select id="queryGrade"  resultMap="gradeOne">
+      SELECT * FROM grade WHERE gid=#{gid}
+  </select>
+  
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.easytop.lesson05.xml.StudentMapper">
+  <!-- 
+     mybatis默认缓存类 FifoCache
+                 内存数据不足时 需要一种机制 保证 内存不出现溢出  需要将旧的数据清除 最先加入的数据 最先清除
+     LRU 最近使用次数最少的 被优先清除
+     LFU 最近一段时间内使用次数最少
+   -->
+  <cache eviction="FIFO" 
+   flushInterval="60000"
+   size="512" readOnly="true"  type="cn.easytop.lesson05.xml.RedisCache"
+  ></cache>
+  <!-- 
+     if 判断条件是否满足 满足 就if中的sql 自动拼接到主sql
+	     where 自动判断第一个条件是否存在where 如果没有 where 追加 
+	         	同时 去掉一个and
+	     trim 永远 灵活度更高      	
+              prefix配置的参数会被添加 在sql语句开始的地方
+              prefixOverrides sql语句首次出现的参数会被覆盖
+            <trim prefix="WhEre" prefixOverrides="and"></trim>========where  
+   -->
+  <select id="queryStudentById" resultType="student" useCache="true">
+      select * from student where sid=#{0}
+      
+  </select>
+  
+  
+  
+  
+
+</mapper>
